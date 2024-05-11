@@ -1,0 +1,4 @@
+topic_name: '/scan'
+queue_size: 10
+topic_name_pointcloud: '/rslidar_points'
+queue_size_pointcloud: 10
