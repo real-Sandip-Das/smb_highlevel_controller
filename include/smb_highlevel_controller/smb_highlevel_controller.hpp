@@ -44,6 +44,9 @@ class SmbHighlevelController
   //! ROS node handle.
   ros::NodeHandle& nodeHandle_;
 
+  //! ROS topic publisher for sending Twist commands to `/cmd_vel`
+  ros::Publisher publisherCmdVel_;
+
   //! ROS topic subscriber for laser scan data.
   ros::Subscriber subscriber_;
 
@@ -59,8 +62,17 @@ class SmbHighlevelController
   //! Queue size of the subscriber object subscriber_
   int subscriberQueueSize_;
   
-  //! Queue side of the subscriber object subscriberPointcloud_
+  //! Queue size of the subscriber object subscriberPointcloud_
   int subscriberQueueSizePointcloud_;
+
+  //! Queue size of the publisher to `/cmd_vel`
+  int publisherQueueSizeCmdVel_;
+
+  //! Proportional Controller parameter
+  double k_p_;
+
+  //! Constant linear velocity to be commanded as a part of the controller
+  double constLinVel_;
 };
 
 } /* namespace */
