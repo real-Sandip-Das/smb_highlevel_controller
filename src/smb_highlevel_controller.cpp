@@ -75,14 +75,14 @@ void SmbHighlevelController::topicCallback(const sensor_msgs::LaserScan& message
 
   geometry_msgs::TransformStamped transformStamped;
   try {
-    transformStamped = tfBuffer_.lookupTransform("rslidar", "odom", ros::Time(0));
+    transformStamped = tfBuffer_.lookupTransform("odom", "rslidar", ros::Time(0));
   } catch (tf2::TransformException &exception) {
     ROS_WARN("%s", exception.what());
     ros::Duration(1.0).sleep();
   }
 
   visualization_msgs::Marker marker;
-  marker.header.frame_id = "rslidar";
+  marker.header.frame_id = "odom";
   marker.header.stamp = ros::Time();
   marker.ns = "smb_highlevel_controller";
   marker.id = 0;
@@ -94,8 +94,7 @@ void SmbHighlevelController::topicCallback(const sensor_msgs::LaserScan& message
   pos_wrt_rslidar.y = pillar_pos_y_;
   pos_wrt_rslidar.z = 0;
 
-  // transform(pos_wrt_rslidar, marker.pose.position, transformStamped.transform);
-  marker.pose.position = pos_wrt_rslidar;
+  transform(pos_wrt_rslidar, marker.pose.position, transformStamped.transform);
   marker.pose.orientation.x = 0.0;
   marker.pose.orientation.y = 0.0;
   marker.pose.orientation.z = 0.0;
@@ -113,23 +112,23 @@ void SmbHighlevelController::topicCallback(const sensor_msgs::LaserScan& message
   ROS_INFO_STREAM("Minimum Range: " << smallest_distance);
 }
 
-void SmbHighlevelController::transform(geometry_msgs::Point& pointIn, geometry_msgs::Point& pointOut, geometry_msgs::Transform transform)
+void SmbHighlevelController::transform(geometry_msgs::Point pointIn, geometry_msgs::Point& pointOut, geometry_msgs::Transform transform)
 {
-  //translation part
-  pointOut.x = pointIn.x - transform.translation.x;
-  pointOut.y = pointIn.y - transform.translation.y;
-  pointOut.z = pointIn.z - transform.translation.z;
-
   /// let, v = pointIn (3D Vector), u = (vector formed by 3D components of the quaternion in transform), s = Scalar part of the quaternion contained in transform
-  double u_dot_u = std::pow(transform.rotation.x, 2) + std::pow(transform.rotation.y, 2) + std::pow(transform.rotation.y, 2);
+  double u_dot_u = std::pow(transform.rotation.x, 2) + std::pow(transform.rotation.y, 2) + std::pow(transform.rotation.z, 2);
   double u_dot_v = pointIn.x*transform.rotation.x + pointIn.y*transform.rotation.y + pointIn.z*transform.rotation.z;
   double s = transform.rotation.w;
   double s_square_minus_u_dot_u = std::pow(s, 2) - u_dot_u;
 
   // rotation part
-  pointOut.x = 2*u_dot_v*transform.rotation.x + s_square_minus_u_dot_u*pointIn.x - 2*s*(transform.rotation.y*pointIn.z - transform.rotation.z*pointIn.y);
-  pointOut.y = 2*u_dot_v*transform.rotation.y + s_square_minus_u_dot_u*pointIn.y - 2*s*(transform.rotation.z*pointIn.x - transform.rotation.x*pointIn.z);
-  pointOut.z = 2*u_dot_v*transform.rotation.z + s_square_minus_u_dot_u*pointIn.z - 2*s*(transform.rotation.x*pointIn.y - transform.rotation.y*pointIn.x);
+  pointOut.x = 2*u_dot_v*transform.rotation.x + s_square_minus_u_dot_u*pointIn.x + 2*s*(transform.rotation.y*pointIn.z - transform.rotation.z*pointIn.y);
+  pointOut.y = 2*u_dot_v*transform.rotation.y + s_square_minus_u_dot_u*pointIn.y + 2*s*(transform.rotation.z*pointIn.x - transform.rotation.x*pointIn.z);
+  pointOut.z = 2*u_dot_v*transform.rotation.z + s_square_minus_u_dot_u*pointIn.z + 2*s*(transform.rotation.x*pointIn.y - transform.rotation.y*pointIn.x);
+
+  //translation part
+  pointOut.x = pointOut.x + transform.translation.x;
+  pointOut.y = pointOut.y + transform.translation.y;
+  pointOut.z = pointOut.z + transform.translation.z;
 }
 
 void SmbHighlevelController::topicCallbackPointCloud(const sensor_msgs::PointCloud2& message)

@@ -54,7 +54,7 @@ class SmbHighlevelController
    * @param pointOut Reference to output point
    * @param transform The transformation to be applied
    */
-  void transform(geometry_msgs::Point& pointIn, geometry_msgs::Point& pointOut, geometry_msgs::Transform transform);
+  void transform(geometry_msgs::Point pointIn, geometry_msgs::Point& pointOut, geometry_msgs::Transform transform);
 
   //! ROS node handle.
   ros::NodeHandle& nodeHandle_;
