@@ -7,7 +7,7 @@ Panels:
         - /Global Options1
         - /Status1
         - /LaserScan1
-        - /PointCloud21
+        - /Marker1
       Splitter Ratio: 0.5
     Tree Height: 520
   - Class: rviz/Selection
@@ -124,12 +124,36 @@ Visualization Manager:
       Value: true
       Visual Enabled: true
     - Class: rviz/TF
-      Enabled: false
+      Enabled: true
       Filter (blacklist): ""
       Filter (whitelist): ""
       Frame Timeout: 15
       Frames:
         All Enabled: true
+        LF_WHEEL:
+          Value: true
+        LH_WHEEL:
+          Value: true
+        RF_WHEEL:
+          Value: true
+        RH_WHEEL:
+          Value: true
+        base_inertia:
+          Value: true
+        base_link:
+          Value: true
+        imu_link:
+          Value: true
+        lidar_mount_link:
+          Value: true
+        odom:
+          Value: true
+        rslidar:
+          Value: true
+        rslidar_base_link:
+          Value: true
+        top:
+          Value: true
       Marker Alpha: 1
       Marker Scale: 1
       Name: TF
@@ -137,9 +161,29 @@ Visualization Manager:
       Show Axes: true
       Show Names: true
       Tree:
-        {}
+        odom:
+          base_link:
+            LF_WHEEL:
+              {}
+            LH_WHEEL:
+              {}
+            RF_WHEEL:
+              {}
+            RH_WHEEL:
+              {}
+            base_inertia:
+              {}
+            imu_link:
+              {}
+            lidar_mount_link:
+              {}
+            rslidar_base_link:
+              rslidar:
+                {}
+            top:
+              {}
       Update Interval: 0
-      Value: false
+      Value: true
     - Alpha: 1
       Autocompute Intensity Bounds: true
       Autocompute Value Bounds:
@@ -196,6 +240,14 @@ Visualization Manager:
       Use Fixed Frame: true
       Use rainbow: true
       Value: true
+    - Class: rviz/Marker
+      Enabled: true
+      Marker Topic: /smb_highlevel_controller/visualization_marker
+      Name: Marker
+      Namespaces:
+        smb_highlevel_controller: true
+      Queue Size: 100
+      Value: true
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
@@ -224,7 +276,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 10.1899995803833
+      Distance: 10.902719497680664
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -240,9 +292,9 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.335399329662323
+      Pitch: 0.37539932131767273
       Target Frame: <Fixed Frame>
-      Yaw: 3.598541736602783
+      Yaw: 2.006711006164551
     Saved: ~
 Window Geometry:
   Displays:
@@ -261,4 +313,4 @@ Window Geometry:
     collapsed: false
   Width: 1200
   X: 242
-  Y: 171
+  Y: 97
